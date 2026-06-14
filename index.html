@@ -239,9 +239,7 @@
             box-shadow: inset 0 -4px 0 rgba(0,0,0,0.25);
         }
 
-        /* ATUALIZAÇÃO: Cor de fundo clara/branca para dar grande destaque ao morango vermelho */
         .morango { background: #f8fafc; border: 1px solid #cbd5e1; }
-        
         .banana { background: #854d0e; }
         .melancia { background: #065f46; }
         .uva { background: #581c87; }
@@ -259,6 +257,26 @@
             box-shadow: 0 0 15px #ffffff;
             transform: scale(1.08);
             z-index: 10;
+        }
+
+        /* NOVA ATUALIZAÇÃO: Classe de iluminação para ajudar o usuário se demorar */
+        .dica-brilho {
+            animation: brilhoDica 1s infinite ease-in-out alternate;
+            z-index: 5;
+            position: relative;
+        }
+
+        @keyframes brilhoDica {
+            0% {
+                transform: scale(1);
+                box-shadow: inset 0 -4px 0 rgba(0,0,0,0.25);
+                outline: 0px solid transparent;
+            }
+            100% {
+                transform: scale(1.04);
+                box-shadow: 0 0 12px #facc15, inset 0 0 8px #facc15;
+                outline: 3px solid #eab308;
+            }
         }
 
         .combo-pop {
@@ -604,6 +622,9 @@
         let trofeusOuro = 0;
         let especiaisPlatina = 0;
 
+        // Controle do timer de inatividade (Ajuda/Dica)
+        let timerInatividade = null;
+
         const bancoFrutas = [
             { classe: 'morango', emoji: '🍓' },
             { classe: 'banana', emoji: '🍌' },
@@ -638,10 +659,9 @@
             { min: 0,     nome: "Cambaxirra" }
         ];
 
-        // ATUALIZAÇÃO: Agora também mapeia e salva o estado de classe e texto de cada um dos 64 blocos
         function salvarProgresso() {
             const estruturaTabuleiro = quadrados.map(q => ({
-                classe: q.className,
+                classe: q.className.replace(' dica-brilho', '').replace(' selecionado', ''),
                 texto: q.innerText
             }));
 
@@ -698,6 +718,71 @@
 
         function inicializarAudioCtx() {
             if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+
+        // NOVO: Gerenciador do Timer de Inatividade de 15 segundos
+        function resetarTimerInatividade() {
+            limparBrilhosDeAjuda();
+            clearTimeout(timerInatividade);
+            timerInatividade = setTimeout(encontrarEIluminarDica, 15000);
+        }
+
+        function limparBrilhosDeAjuda() {
+            quadrados.forEach(q => q.classList.remove('dica-brilho'));
+        }
+
+        // NOVO: Procura e ilumina um par válido para pontuar se o usuário travar
+        function encontrarEIluminarDica() {
+            // Ignora se houver bombas ativas (elas já são uma dica óbvia de ação)
+            let temBombaDisponivel = quadrados.some(q => q.innerText === '💣'); 
+            if (temBombaDisponivel) return;
+
+            function simulaECheca(id1, id2) {
+                let c1 = quadrados[id1].className; let t1 = quadrados[id1].innerText;
+                let c2 = quadrados[id2].className; let t2 = quadrados[id2].innerText;
+                quadrados[id1].className = c2; quadrados[id1].innerText = t2;
+                quadrados[id2].className = c1; quadrados[id2].innerText = t1;
+                let temMatch = testeMatchLocal();
+                quadrados[id1].className = c1; quadrados[id1].innerText = t1;
+                quadrados[id2].className = c2; quadrados[id2].innerText = t2;
+                return temMatch;
+            }
+
+            function testeMatchLocal() {
+                for (let r = 0; r < LARGURA; r++) {
+                    for (let c = 0; c < LARGURA - 2; c++) {
+                        let i = r * LARGURA + c; let t = obterClasse(quadrados[i]);
+                        if (t && t === obterClasse(quadrados[i+1]) && t === obterClasse(quadrados[i+2])) return true;
+                    }
+                }
+                for (let c = 0; c < LARGURA; c++) {
+                    for (let r = 0; r < LARGURA - 2; r++) {
+                        let i = r * LARGURA + c; let t = obterClasse(quadrados[i]);
+                        if (t && t === obterClasse(quadrados[i+LARGURA]) && t === obterClasse(quadrados[i+LARGURA*2])) return true;
+                    }
+                }
+                for (let r = 0; r < LARGURA - 1; r++) {
+                    for (let c = 0; c < LARGURA - 1; c++) {
+                        let i = r * LARGURA + c; let t = obterClasse(quadrados[i]);
+                        if (t && t === obterClasse(quadrados[i+1]) && t === obterClasse(quadrados[i+LARGURA]) && t === obterClasse(quadrados[i+LARGURA+1])) return true;
+                    }
+                }
+                return false;
+            }
+
+            for (let i = 0; i < LARGURA * LARGURA; i++) {
+                let linha = Math.floor(i / LARGURA); let coluna = i % LARGURA;
+                if (coluna < LARGURA - 1 && simulaECheca(i, i + 1)) { 
+                    quadrados[i].classList.add('dica-brilho');
+                    quadrados[i+1].classList.add('dica-brilho');
+                    break; 
+                }
+                if (linha < LARGURA - 1 && simulaECheca(i, i + LARGURA)) { 
+                    quadrados[i].classList.add('dica-brilho');
+                    quadrados[i+LARGURA].classList.add('dica-brilho');
+                    break; 
+                }
+            }
         }
 
         function alternarMusica() {
@@ -773,7 +858,7 @@
         function dispararAlertaTextoConquista(mensagem) {
             const aviso = document.createElement('div');
             aviso.className = 'alerta-conquista-pop';
-            aviso.innerHTML = mensagem;
+            aviso.innerHTML = message;
             document.body.appendChild(aviso);
             setTimeout(() => aviso.remove(), 2500);
         }
@@ -833,7 +918,6 @@
             tabuleiro.innerHTML = ""; quadrados = [];
             const frutasAtuais = obterFrutasDisponiveis();
             
-            // ATUALIZAÇÃO: Verifica se há dados de layout pré-salvos para restaurar perfeitamente
             if (tabuleiroCarregadoDoSave && tabuleiroCarregadoDoSave.length === 64) {
                 for (let i = 0; i < LARGURA * LARGURA; i++) {
                     const quadrado = document.createElement('div');
@@ -845,10 +929,8 @@
                     quadrado.addEventListener('touchstart', iniciarArrasto, { passive: true });
                     tabuleiro.appendChild(quadrado); quadrados.push(quadrado);
                 }
-                // Limpa a memória volátil após montar o tabuleiro restaurado
                 tabuleiroCarregadoDoSave = null;
             } else {
-                // Caso não haja save de layout, gera um tabuleiro novo aleatório normalmente
                 for (let i = 0; i < LARGURA * LARGURA; i++) {
                     const quadrado = document.createElement('div');
                     quadrado.classList.add('quadrado'); quadrado.setAttribute('id', i);
@@ -872,10 +954,12 @@
                 }
             }
             atualizarInterface(); atualizarPainelConquistas();
+            resetarTimerInatividade(); // Inicia o contador de ajuda
         }
 
         function iniciarArrasto(e) {
             inicializarAudioCtx(); quadradoArrastadoId = parseInt(this.id);
+            resetarTimerInatividade(); // Interagiu: reseta timer e apaga brilho de dica
             
             if (this.classList.contains('bomba') || this.classList.contains('bomba-linha') || this.classList.contains('bomba-coluna')) {
                 ativarBombaFiltro(quadradoArrastadoId, this.className);
@@ -1168,7 +1252,8 @@
                 let teveMatchAutomatico = checarCombinacoesCompleto(true);
                 if (!teveMatchAutomatico) {
                     verificarFimDeJogo();
-                    salvarProgresso(); // Auto-salva após estabilizar as frutas caídas
+                    salvarProgresso();
+                    resetarTimerInatividade(); // Restaura contagem após o tabuleiro assentar
                 }
             }
         }
@@ -1219,6 +1304,7 @@
         }
 
         function dispararGameOver() {
+            clearTimeout(timerInatividade);
             localStorage.removeItem('metafrutas_savegame_v5');
             gameoverDetalhes.innerHTML = `
                 Não há mais combinações possíveis no tabuleiro.<br><br>
@@ -1242,6 +1328,10 @@
             tabuleiroCarregadoDoSave = null;
             marcosAlcancados.clear(); modalGameOver.style.display = "none"; criarTabuleiro();
         }
+
+        // Detecta interações globais na página para resetar o temporizador de dicas de forma responsiva
+        window.addEventListener('mousedown', resetarTimerInatividade, { passive: true });
+        window.addEventListener('touchstart', resetarTimerInatividade, { passive: true });
 
         carregarProgressoSalvo();
         criarTabuleiro();
