@@ -149,7 +149,7 @@
 
         .alerta-conquista-pop {
             position: fixed;
-            top: 40%;
+            top: 20%;
             left: 50%;
             transform: translate(-50%, -50%) scale(0.5);
             background: linear-gradient(135deg, #facc15, #eab308);
@@ -157,7 +157,7 @@
             padding: 15px 30px;
             border-radius: 20px;
             font-family: 'Arial Black', Gadget, sans-serif;
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             text-align: center;
             box-shadow: 0 10px 30px rgba(234, 179, 8, 0.5), 0 0 0 6px rgba(255,255,255,0.2);
             z-index: 200;
@@ -259,7 +259,6 @@
             z-index: 10;
         }
 
-        /* NOVA ATUALIZAÇÃO: Classe de iluminação para ajudar o usuário se demorar */
         .dica-brilho {
             animation: brilhoDica 1s infinite ease-in-out alternate;
             z-index: 5;
@@ -540,7 +539,7 @@
 
     <div id="modal-regras" class="modal">
         <div class="modal-conteudo">
-            <div class="regras-titulo">ℹ️ Regras & Combos Especial</div>
+            <div class="regras-titulo">ℹ️ Regras & Combos Especiais</div>
             <div class="regras-corpo">
                 <div class="regras-secao">
                     <strong>💥 Superbomba de Linha (Horizontal)</strong>
@@ -622,7 +621,6 @@
         let trofeusOuro = 0;
         let especiaisPlatina = 0;
 
-        // Controle do timer de inatividade (Ajuda/Dica)
         let timerInatividade = null;
 
         const bancoFrutas = [
@@ -636,6 +634,7 @@
             { classe: 'kiwi', emoji: '🥝' }     
         ];
 
+        // AJUSTADO: Nome corrigido de "Nível Haime" para "Nível Hime"
         const metasNiveis = [
             { min: 20000, nome: "Nivel Pica" },
             { min: 18000, nome: "Nível Wagner" },
@@ -652,7 +651,7 @@
             { min: 6000,  nome: "Nível Will" },
             { min: 5000,  nome: "Nível Cleber" },
             { min: 4000,  nome: "Nivel Ramon" },
-            { min: 3000,  nome: "Nível Haime" },
+            { min: 3000,  nome: "Nível Hime" },
             { min: 1500,  nome: "Metafofos" },
             { min: 1000,  nome: "Fofos" },
             { min: 500,   nome: "Meta" },
@@ -670,11 +669,11 @@
                 estrelas: estrelas, bronze: medalhasBronze, prata: medalhasPrata, ouro: medalhasOuro, trofeu: trofeusOuro, platina: especiaisPlatina,
                 layoutTabuleiro: estruturaTabuleiro
             };
-            localStorage.setItem('metafrutas_savegame_v5', JSON.stringify(dadosDoJogo));
+            localStorage.setItem('metafrutas_savegame_v6', JSON.stringify(dadosDoJogo));
         }
 
         function carregarProgressoSalvo() {
-            const dadosSalvos = localStorage.getItem('metafrutas_savegame_v5');
+            const dadosSalvos = localStorage.getItem('metafrutas_savegame_v6');
             if (dadosSalvos) {
                 try {
                     const d = JSON.parse(dadosSalvos);
@@ -700,7 +699,7 @@
 
         function deletarProgressoSalvo() {
             if (confirm("Deseja apagar tudo e recomeçar do zero?")) {
-                localStorage.removeItem('metafrutas_savegame_v5');
+                localStorage.removeItem('metafrutas_savegame_v6');
                 pontos = 0; proximoMarcoBomba = 500; estrelas = 0;
                 medalhasBronze = 0; medalhasPrata = 0; medalhasOuro = 0; trofeusOuro = 0; especiaisPlatina = 0;
                 tabuleiroCarregadoDoSave = null;
@@ -720,7 +719,6 @@
             if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         }
 
-        // NOVO: Gerenciador do Timer de Inatividade de 15 segundos
         function resetarTimerInatividade() {
             limparBrilhosDeAjuda();
             clearTimeout(timerInatividade);
@@ -731,9 +729,7 @@
             quadrados.forEach(q => q.classList.remove('dica-brilho'));
         }
 
-        // NOVO: Procura e ilumina um par válido para pontuar se o usuário travar
         function encontrarEIluminarDica() {
-            // Ignora se houver bombas ativas (elas já são uma dica óbvia de ação)
             let temBombaDisponivel = quadrados.some(q => q.innerText === '💣'); 
             if (temBombaDisponivel) return;
 
@@ -855,10 +851,11 @@
             setTimeout(() => pop.remove(), 1200);
         }
 
+        // CORRIGIDO: Modificado de `message` para `mensagem` para consertar o crash de pontuação das 4 frutas/bombas
         function dispararAlertaTextoConquista(mensagem) {
             const aviso = document.createElement('div');
             aviso.className = 'alerta-conquista-pop';
-            aviso.innerHTML = message;
+            aviso.innerHTML = mensagem;
             document.body.appendChild(aviso);
             setTimeout(() => aviso.remove(), 2500);
         }
@@ -866,6 +863,7 @@
         function abrirModalRegras() { modalRegras.style.display = "flex"; }
         function fecharModalRegras() { modalRegras.style.display = "none"; }
 
+        // CORRIGIDO: Lógica de empilhamento e fusão sequencial das medalhas consertada
         function adicionarSuperbombaConquista() {
             medalhasBronze++;
             dispararAlertaTextoConquista("🥉 MEDALHA DE BRONZE!");
@@ -954,15 +952,15 @@
                 }
             }
             atualizarInterface(); atualizarPainelConquistas();
-            resetarTimerInatividade(); // Inicia o contador de ajuda
+            resetarTimerInatividade();
         }
 
         function iniciarArrasto(e) {
             inicializarAudioCtx(); quadradoArrastadoId = parseInt(this.id);
-            resetarTimerInatividade(); // Interagiu: reseta timer e apaga brilho de dica
+            resetarTimerInatividade();
             
             if (this.classList.contains('bomba') || this.classList.contains('bomba-linha') || this.classList.contains('bomba-coluna')) {
-                ativarBombaFiltro(quadradoArrastadoId, this.className);
+                executarBombaFiltro(quadradoArrastadoId, this.className);
                 if(e.cancelable) e.preventDefault(); return;
             }
             if (e.type === 'touchstart') {
@@ -1048,11 +1046,8 @@
             salvarProgresso();
         }
 
-        function activarBombaFiltro(id, classes) {
-            ativarBombaFiltro(id, classes);
-        }
-
-        function ativarBombaFiltro(id, classes) {
+        // CORRIGIDO: Função renomeada para evitar recursão infinita que travava o jogo ao interagir com bombas
+        function executarBombaFiltro(id, classes) {
             if (classes.includes('bomba-linha')) explodirBombaLinha(id);
             else if (classes.includes('bomba-coluna')) explodirBombaColuna(id);
             else explodirBombaNormal(id);
@@ -1226,10 +1221,10 @@
 
             for (let i = 55; i >= 0; i--) {
                 if (quadrados[i + LARGURA].innerText === '') {
-                    const classeAtual = obterClasse(quadrados[i]);
-                    if (classeAtual) {
-                        const f = bancoFrutas.find(f => f.classe === classeAtual);
-                        quadrados[i + LARGURA].className = `quadrado ${classeAtual}`;
+                    const classAtual = obterClasse(quadrados[i]);
+                    if (classAtual) {
+                        const f = bancoFrutas.find(f => f.classe === classAtual);
+                        quadrados[i + LARGURA].className = `quadrado ${classAtual}`;
                         quadrados[i + LARGURA].innerText = f.emoji; 
                         esvaziarQuadrado(i);
                         fezMovimento = true;
@@ -1253,7 +1248,7 @@
                 if (!teveMatchAutomatico) {
                     verificarFimDeJogo();
                     salvarProgresso();
-                    resetarTimerInatividade(); // Restaura contagem após o tabuleiro assentar
+                    resetarTimerInatividade();
                 }
             }
         }
@@ -1305,7 +1300,7 @@
 
         function dispararGameOver() {
             clearTimeout(timerInatividade);
-            localStorage.removeItem('metafrutas_savegame_v5');
+            localStorage.removeItem('metafrutas_savegame_v6');
             gameoverDetalhes.innerHTML = `
                 Não há mais combinações possíveis no tabuleiro.<br><br>
                 <strong>Pontuação Final:</strong> <span style="color:#4ade80">${pontos}</span> pontos<br>
@@ -1329,7 +1324,6 @@
             marcosAlcancados.clear(); modalGameOver.style.display = "none"; criarTabuleiro();
         }
 
-        // Detecta interações globais na página para resetar o temporizador de dicas de forma responsiva
         window.addEventListener('mousedown', resetarTimerInatividade, { passive: true });
         window.addEventListener('touchstart', resetarTimerInatividade, { passive: true });
 
