@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MetaFrutas Pro - Edição Especial</title>
+    <title>MetaFrutas Pro - Edição Suprema</title>
     <style>
         * {
             box-sizing: border-box;
@@ -13,7 +13,7 @@
 
         body {
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background: linear-gradient(135deg, #111827, #1f2937);
+            background: linear-gradient(135deg, #0f172a, #1e1b4b);
             color: white;
             display: flex;
             flex-direction: column;
@@ -24,15 +24,14 @@
             padding: 10px;
         }
 
-        /* Título Alegre e Estilizado */
         h1 {
             font-family: 'Arial Black', Gadget, sans-serif;
-            font-size: 2.6rem;
+            font-size: 2.4rem;
             background: linear-gradient(to bottom, #4ade80, #22c55e);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             filter: drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.4)) drop-shadow(0px 0px 12px rgba(74, 222, 128, 0.4));
-            margin-bottom: 8px;
+            margin-bottom: 5px;
             text-align: center;
             letter-spacing: 1px;
             transform: rotate(-1deg);
@@ -40,40 +39,155 @@
 
         #painel-superior {
             display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 12px;
+            width: 100%;
+            max-width: 500px;
+            align-items: center;
+            position: relative;
+        }
+
+        .linha-info {
+            display: flex;
             gap: 10px;
-            margin-bottom: 15px;
+            justify-content: center;
+            width: 100%;
+            padding-right: 40px;
         }
 
         .info-box {
-            font-size: 1.1rem;
-            background: #374151;
-            padding: 8px 20px;
+            font-size: 1rem;
+            background: #1e293b;
+            padding: 6px 16px;
             border-radius: 50px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            border: 2px solid #4b5563;
+            border: 2px solid #334155;
             font-weight: bold;
             text-align: center;
         }
 
         #nivel-box {
-            border-color: #4ade80;
+            border-color: #22c55e;
             color: #4ade80;
+            box-shadow: 0 0 10px rgba(34, 197, 94, 0.2);
+        }
+
+        .btn-ajuda {
+            position: absolute;
+            right: 5px;
+            top: 2px;
+            width: 32px;
+            height: 32px;
+            background: #334155;
+            border: 2px solid #475569;
+            border-radius: 50%;
+            color: #f8fafc;
+            font-weight: bold;
+            font-size: 1.1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            transition: all 0.2s;
+        }
+        .btn-ajuda:hover {
+            background: #475569;
+            color: #ffffff;
+            transform: scale(1.05);
+        }
+
+        .conquistas-container {
+            background: linear-gradient(145deg, #1e1b4b, #0f172a);
+            border: 2px solid #6366f1;
+            border-radius: 14px;
+            padding: 10px 14px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.95rem;
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.4), inset 0 2px 4px rgba(0,0,0,0.6);
+        }
+
+        .item-conquista {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background: #312e81;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-weight: bold;
+            color: #e0e7ff;
+            border: 1px solid #4338ca;
+        }
+
+        .lista-medalhas {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .lista-medalhas span {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 1rem;
+            display: inline-flex;
+            align-items: center;
+            text-shadow: 0 0 8px rgba(255,255,255,0.4);
+            animation: brilharMedalha 2s infinite ease-in-out;
+        }
+
+        @keyframes brilharMedalha {
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 2px rgba(255,255,255,0.2)); }
+            50% { transform: scale(1.05); filter: drop-shadow(0 0 8px rgba(255,255,255,0.6)); }
+        }
+
+        .alerta-conquista-pop {
+            position: fixed;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.5);
+            background: linear-gradient(135deg, #facc15, #eab308);
+            color: #0f172a;
+            padding: 15px 30px;
+            border-radius: 20px;
+            font-family: 'Arial Black', Gadget, sans-serif;
+            font-size: 1.5rem;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(234, 179, 8, 0.5), 0 0 0 6px rgba(255,255,255,0.2);
+            z-index: 200;
+            opacity: 0;
+            pointer-events: none;
+            animation: avisoConquistaAnim 2.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        @keyframes avisoConquistaAnim {
+            0% { transform: translate(-50%, -20%) scale(0.6); opacity: 0; }
+            15% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+            30% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            85% { transform: translate(-50%, -50%) scale(1); opacity: 1; filter: blur(0); }
+            100% { transform: translate(-50%, -80%) scale(0.8); opacity: 0; filter: blur(4px); }
         }
 
         #layout-jogo {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 12px;
             width: 100%;
             max-width: 500px;
             position: relative;
         }
 
         #container-barra {
-            width: 20px;
-            height: 380px;
-            background: #1f2937;
-            border: 2px solid #374151;
+            width: 18px;
+            height: 360px;
+            background: #0f172a;
+            border: 2px solid #334155;
             border-radius: 10px;
             overflow: hidden;
             display: flex;
@@ -82,23 +196,24 @@
             box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
         }
 
+        /* BARRA LATERAL ATUALIZADA: Degradê do verde escuro para o claro de baixo para cima */
         #barra-progresso {
             width: 100%;
             height: 0%;
-            background: linear-gradient(to top, #22c55e, #4ade80);
+            background: linear-gradient(to top, #15803d 0%, #22c55e 50%, #4ade80 100%);
             border-radius: 8px;
-            transition: height 0.3s ease;
-            box-shadow: 0 0 10px rgba(74, 222, 128, 0.5);
+            transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 14px rgba(74, 222, 128, 0.6);
         }
 
         #container-tabuleiro {
             flex: 1;
             aspect-ratio: 1 / 1;
-            background: #1f2937;
-            padding: 8px;
+            background: #1e293b;
+            padding: 6px;
             border-radius: 16px;
             box-shadow: 0 12px 24px rgba(0,0,0,0.6);
-            border: 3px solid #374151;
+            border: 3px solid #334155;
         }
 
         #tabuleiro {
@@ -111,7 +226,7 @@
         }
 
         .quadrado {
-            background: #2d3748;
+            background: #334155;
             border-radius: 10px;
             display: flex;
             align-items: center;
@@ -122,7 +237,7 @@
             user-select: none;
             -webkit-user-select: none;
             touch-action: none;
-            box-shadow: inset 0 -4px 0 rgba(0,0,0,0.2);
+            box-shadow: inset 0 -4px 0 rgba(0,0,0,0.25);
         }
 
         .morango { background: #991b1b; }
@@ -133,7 +248,10 @@
         .abacaxi { background: #b45309; }
         .cereja { background: #be123c; }
         .kiwi { background: #15803d; }
-        .bomba { background: #374151; border: 2px dashed #f59e0b; font-size: 2rem !important; }
+        
+        .bomba { background: #475569; border: 2px dashed #f59e0b; font-size: 2rem !important; }
+        .bomba-linha { background: #1e3a8a; border: 2px solid #3b82f6; font-size: 2rem !important; box-shadow: 0 0 10px #3b82f6; }
+        .bomba-coluna { background: #14532d; border: 2px solid #22c55e; font-size: 2rem !important; box-shadow: 0 0 10px #22c55e; }
         
         .selecionado {
             outline: 4px solid #ffffff;
@@ -142,14 +260,13 @@
             z-index: 10;
         }
 
-        /* Textos de Combo Fofos e Animados */
         .combo-pop {
             position: absolute;
             top: -25px;
             left: 50%;
             transform: translateX(-50%);
             font-family: 'Comic Sans MS', 'Arial Black', sans-serif;
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             font-weight: bold;
             color: #fef08a;
             text-shadow: 2px 2px 0px #b45309, -2px -2px 0px #b45309, 2px -2px 0px #b45309, -2px 2px 0px #b45309, 0 4px 15px rgba(0,0,0,0.5);
@@ -166,55 +283,53 @@
         }
 
         @media (max-width: 440px) {
-            #container-barra { height: 280px; width: 16px; }
+            #container-barra { height: 280px; width: 14px; }
             .quadrado { font-size: 1.4rem; border-radius: 6px; }
-            h1 { font-size: 2rem; }
-            .info-box { font-size: 0.9rem; padding: 6px 14px; }
-            .combo-pop { font-size: 1.4rem; }
+            h1 { font-size: 1.8rem; }
+            .info-box { font-size: 0.85rem; padding: 4px 12px; }
+            .conquistas-container { font-size: 0.8rem; padding: 6px 10px; }
+            .combo-pop { font-size: 1.2rem; }
+            .alerta-conquista-pop { font-size: 1.2rem; padding: 10px 20px; }
         }
 
         .paineis-botoes {
             display: flex;
-            gap: 10px;
-            margin-top: 12px;
+            gap: 8px;
+            margin-top: 10px;
             flex-wrap: wrap;
             justify-content: center;
         }
 
         .btn-game {
-            background: #4b5563;
+            background: #334155;
             border: none;
             color: white;
-            padding: 8px 16px;
+            padding: 6px 14px;
             border-radius: 20px;
             cursor: pointer;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-weight: bold;
             transition: all 0.2s;
         }
         
         .btn-game.mutado {
-            background: #1f2937;
-            color: #9ca3af;
-            border: 1px solid #4b5563;
+            background: #0f172a;
+            color: #64748b;
+            border: 1px solid #334155;
         }
 
         .btn-save { background: #2563eb; }
-        .btn-save:hover { background: #1d4ed8; }
         .btn-reset { background: #dc2626; }
-        .btn-reset:hover { background: #b91c1c; }
 
-        /* Rodapé de Créditos */
         .creditos {
-            margin-top: 15px;
+            margin-top: 12px;
             font-size: 0.75rem;
-            color: #9ca3af;
+            color: #94a3b8;
             letter-spacing: 0.5px;
             opacity: 0.8;
             text-align: center;
         }
 
-        /* ---- MODAIS REFEITOS ---- */
         .modal {
             display: none;
             position: fixed;
@@ -230,15 +345,22 @@
             backdrop-filter: blur(6px);
         }
 
-        /* Modal de Nível Alegre e Festivo */
+        .modal-conteudo {
+            background: #1e293b;
+            border-radius: 16px;
+            padding: 25px 20px;
+            max-width: 380px;
+            width: 100%;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+            animation: surgir 0.3s ease-out;
+        }
+
         #modal-alerta .modal-conteudo {
             background: linear-gradient(135deg, #1e1b4b, #311042);
             border: 4px solid #fef08a;
             border-radius: 24px;
             padding: 35px 25px;
             text-align: center;
-            max-width: 360px;
-            width: 100%;
             box-shadow: 0 0 30px rgba(254, 240, 138, 0.3), inset 0 0 15px rgba(254, 240, 138, 0.2);
             animation: surgirEQuicar 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) ease-out;
         }
@@ -272,54 +394,71 @@
             cursor: pointer;
             font-size: 1.1rem;
             font-weight: bold;
-            box-shadow: 0 4px 15px rgba(34, 197, 94, 0.4), inset 0 -4px 0 rgba(0,0,0,0.2);
-            transition: transform 0.1s, filter 0.2s;
+            box-shadow: 0 4px 15px rgba(34, 197, 94, 0.4);
             text-transform: uppercase;
-            letter-spacing: 1px;
         }
 
-        .btn-modal-alegre:hover {
-            filter: brightness(1.1);
-        }
-
-        .btn-modal-alegre:active {
-            transform: scale(0.96);
-        }
-
-        /* Modal Game Over */
         #modal-gameover .modal-conteudo { 
-            background: #1f2937;
             border: 3px solid #ef4444; 
-            border-radius: 16px;
-            padding: 30px 20px;
             text-align: center;
-            max-width: 320px;
-            width: 100%;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
-            animation: surgir 0.3s ease-out;
         }
+
         #modal-gameover .modal-titulo { 
             font-size: 1.8rem;
             font-weight: bold;
             color: #ef4444; 
             margin-bottom: 15px;
         }
-        .modal-detalhes {
-            font-size: 1.1rem;
-            color: #e5e7eb;
-            margin-bottom: 20px;
-            line-height: 1.5;
+
+        .resumo-conquistas-fim {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 10px;
+            padding: 12px;
+            margin: 15px 0;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
         }
-        .btn-modal-padrao {
-            background: #374151;
-            border: 1px solid #4b5563;
-            color: #ffffff;
-            padding: 10px 24px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.95rem;
+
+        #modal-regras .modal-conteudo {
+            border: 3px solid #3b82f6;
+            max-width: 420px;
+        }
+        .regras-titulo {
+            font-size: 1.4rem;
             font-weight: bold;
-            transition: all 0.2s;
+            color: #3b82f6;
+            text-align: center;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 8px;
+        }
+        .regras-corpo {
+            font-size: 0.9rem;
+            text-align: left;
+            line-height: 1.5;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-height: 320px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+        .regras-secao {
+            background: #0f172a;
+            padding: 8px;
+            border-radius: 8px;
+            border-left: 3px solid #4ade80;
+        }
+        .regras-secao.blue { border-left-color: #3b82f6; }
+        .regras-secao.yellow { border-left-color: #facc15; }
+        
+        .regras-secao strong {
+            color: #f1f5f9;
+            display: block;
+            margin-bottom: 4px;
         }
 
         @keyframes surgirEQuicar {
@@ -339,8 +478,19 @@
     <h1>✨ MetaFrutas ✨</h1>
     
     <div id="painel-superior">
-        <div class="info-box">Pontos: <span id="pontos-texto">0</span></div>
-        <div class="info-box" id="nivel-box">Nível: <span id="nivel-texto">Cambaxirra</span></div>
+        <div class="linha-info">
+            <div class="info-box">Pontos: <span id="pontos-texto">0</span></div>
+            <div class="info-box" id="nivel-box">Nível: <span id="nivel-texto">Cambaxirra</span></div>
+        </div>
+        
+        <button class="btn-ajuda" onclick="abrirModalRegras()">?</button>
+
+        <div class="conquistas-container">
+            <div class="item-conquista">⭐ Estrelas: <span id="estrelas-texto">0/3</span></div>
+            <div class="lista-medalhas" id="conquistas-lista-topo">
+                <span>🏆 Sem conquistas</span>
+            </div>
+        </div>
     </div>
     
     <div id="layout-jogo">
@@ -355,8 +505,8 @@
     <div class="paineis-botoes">
         <button id="btn-musica" class="btn-game mutado" onclick="alternarMusica()">🎵 Música: OFF</button>
         <button id="btn-efeitos" class="btn-game" onclick="alternarEfeitos()">🔊 Efeitos: ON</button>
-        <button id="btn-salvar" class="btn-game btn-save" onclick="forcarSalvarProgresso()">💾 Salvar Progresso</button>
-        <button class="btn-game btn-reset" onclick="deletarProgressoSalvo()">🔄 Resetar Jogo</button>
+        <button id="btn-salvar" class="btn-game btn-save" onclick="forcarSalvarProgresso()">💾 Salvar</button>
+        <button class="btn-game btn-reset" onclick="deletarProgressoSalvo()">🔄 Reset</button>
     </div>
 
     <div class="creditos">jogo desenvolvido por Wagner e Maria Helena</div>
@@ -369,11 +519,47 @@
         </div>
     </div>
 
+    <div id="modal-regras" class="modal">
+        <div class="modal-conteudo">
+            <div class="regras-titulo">ℹ️ Regras & Combos Especial</div>
+            <div class="regras-corpo">
+                <div class="regras-secao">
+                    <strong>💥 Superbomba de Linha (Horizontal)</strong>
+                    Alcançada ao fazer uma combinação de 4 frutas em linha/coluna, ou ao fazer um <strong>Combo Quadrado (2x2)</strong>! Destrói toda a linha lateral ao ser clicada.
+                </div>
+                <div class="regras-secao blue">
+                    <strong>🚀 Superbomba de Coluna (Vertical)</strong>
+                    Alcançada instantaneamente ao pontuar combinando 5 ou mais frutas iguais. Limpa toda a coluna de cima a baixo.
+                </div>
+                <div class="regras-secao">
+                    <strong>⭐ Estrelas e Bônus</strong>
+                    Cada combinação de 4 frutas iguais (em linha ou bloco quadrado) concede 1 Estrela. Ao acumular 3 Estrelas, você ganha uma Superbomba extra!
+                </div>
+                <div class="regras-secao yellow">
+                    <strong>🏅 Evolução de Conquistas</strong>
+                    Cada Superbomba criada acumula pontos de Conquista que se fundem automaticamente:<br>
+                    • 1 Superbomba = Medalha de Bronze 🥉<br>
+                    • 3 Bronzes ➡️ Substituídas por 1 Prata 🥈<br>
+                    • 3 Pratas ➡️ Substituídas por 1 Ouro 🥇<br>
+                    • 6 Ouros ➡️ Substituídas por 1 Troféu de Ouro 🏆<br>
+                    • 3 Troféus ➡️ Substituídos por 1 Especial de Platina 💎
+                </div>
+            </div>
+            <button class="btn-modal-alegre" style="padding: 8px 20px; font-size: 0.95rem; margin-top: 15px; width: 100%;" onclick="fecharModalRegras()">Entendido!</button>
+        </div>
+    </div>
+
     <div id="modal-gameover" class="modal">
         <div class="modal-conteudo">
-            <div class="modal-titulo">Fim de Jogo!</div>
-            <div id="gameover-detalhes" class="modal-detalhes"></div>
-            <button class="btn-modal-padrao" onclick="reiniciarJogo()">Iniciar Novamente</button>
+            <div class="modal-titulo">🏁 Fim de Jogo!</div>
+            <div id="gameover-detalhes" style="font-size: 1.05rem; margin-bottom: 10px;"></div>
+            
+            <div class="resumo-conquistas-fim">
+                <strong style="color: #facc15; text-align: center; display: block; margin-bottom: 4px;">🏅 Galeria de Conquistas:</strong>
+                <div id="conquistas-finais-detalhe">Nenhuma medalha obtida.</div>
+            </div>
+
+            <button class="btn-modal-alegre" style="padding: 10px 24px; font-size: 1rem;" onclick="reiniciarJogo()">Jogar De Novo</button>
         </div>
     </div>
 
@@ -386,7 +572,11 @@
         const modalAlerta = document.getElementById('modal-alerta');
         const modalTextoNivel = document.getElementById('modal-texto-nivel');
         const modalGameOver = document.getElementById('modal-gameover');
+        const modalRegras = document.getElementById('modal-regras');
         const gameoverDetalhes = document.getElementById('gameover-detalhes');
+        const conquistasFinaisDetalhe = document.getElementById('conquistas-finais-detalhe');
+        const templatesListaTopo = document.getElementById('conquistas-lista-topo');
+        const estrelasTexto = document.getElementById('estrelas-texto');
         const btnSalvar = document.getElementById('btn-salvar');
         
         const LARGURA = 8;
@@ -405,6 +595,13 @@
         let touchStartY = 0;
         let quadradoArrastadoId = null;
 
+        let estrelas = 0;
+        let medalhasBronze = 0;
+        let medalhasPrata = 0;
+        let medalhasOuro = 0;
+        let trofeusOuro = 0;
+        let especiaisPlatina = 0;
+
         const bancoFrutas = [
             { classe: 'morango', emoji: '🍓' },
             { classe: 'banana', emoji: '🍌' },
@@ -419,62 +616,61 @@
         const metasNiveis = [
             { min: 20000, nome: "Nivel Pica" },
             { min: 18000, nome: "Nível Wagner" },
+            { min: 17000, nome: "Nível Odissey" },
             { min: 16000, nome: "Nível Veruska" },
             { min: 14000, nome: "Nível Morg" },
+            { min: 13000, nome: "Nível Dai" },
             { min: 12000, nome: "Nível Vitor" },
+            { min: 11000, nome: "Nível Lutika" },
             { min: 10000, nome: "Nível Guilherme" },
-            { min: 8000, nome: "Nível Coronel" },
-            { min: 6000, nome: "Nível Will" },
-            { min: 4000, nome: "Nivel Ramon" },
-            { min: 2000, nome: "Nível Cap" },
-            { min: 1500, nome: "Metafofos" },
-            { min: 1000, nome: "Fofos" },
-            { min: 500,  nome: "Meta" },
-            { min: 0,    nome: "Cambaxirra" }
+            { min: 9000,  nome: "Nível Lurmito" },
+            { min: 8000,  nome: "Nível Coronel" },
+            { min: 7000,  nome: "Nível Master" },
+            { min: 6000,  nome: "Nível Will" },
+            { min: 5000,  nome: "Nível Cleber" },
+            { min: 4000,  nome: "Nivel Ramon" },
+            { min: 3000,  nome: "Nível Haime" },
+            { min: 1500,  nome: "Metafofos" },
+            { min: 1000,  nome: "Fofos" },
+            { min: 500,   nome: "Meta" },
+            { min: 0,     nome: "Cambaxirra" }
         ];
 
         function salvarProgresso() {
             const dadosDoJogo = {
-                pontos: pontos,
-                proximoMarcoBomba: proximoMarcoBomba,
-                marcosAlcancados: Array.from(marcosAlcancados)
+                pontos: pontos, proximoMarcoBomba: proximoMarcoBomba, marcosAlcancados: Array.from(marcosAlcancados),
+                estrelas: estrelas, bronze: medalhasBronze, prata: medalhasPrata, ouro: medalhasOuro, trofeu: trofeusOuro, platina: especiaisPlatina
             };
-            localStorage.setItem('metafrutas_savegame', JSON.stringify(dadosDoJogo));
+            localStorage.setItem('metafrutas_savegame_v4', JSON.stringify(dadosDoJogo));
         }
 
         function carregarProgressoSalvo() {
-            const dadosSalvos = localStorage.getItem('metafrutas_savegame');
+            const dadosSalvos = localStorage.getItem('metafrutas_savegame_v4');
             if (dadosSalvos) {
                 try {
-                    const dadosParseados = JSON.parse(dadosSalvos);
-                    pontos = dadosParseados.pontos || 0;
-                    proximoMarcoBomba = dadosParseados.proximoMarcoBomba || 500;
-                    marcosAlcancados = new Set(dadosParseados.marcosAlcancados || []);
+                    const d = JSON.parse(dadosSalvos);
+                    pontos = d.pontos || 0; proximoMarcoBomba = d.proximoMarcoBomba || 500;
+                    marcosAlcancados = new Set(d.marcosAlcancados || []);
+                    estrelas = d.estrelas || 0; medalhasBronze = d.bronze || 0; medalhasPrata = d.prata || 0;
+                    medalhasOuro = d.ouro || 0; trofeusOuro = d.trofeu || 0; especiaisPlatina = d.platina || 0;
                     return true;
-                } catch (e) {
-                    return false;
-                }
+                } catch (e) { return false; }
             }
             return false;
         }
 
         function forcarSalvarProgresso() {
             salvarProgresso();
-            btnSalvar.innerText = "✅ Progresso Salvo!";
-            btnSalvar.style.background = "#10b981";
-            setTimeout(() => {
-                btnSalvar.innerText = "💾 Salvar Progresso";
-                btnSalvar.style.background = "#2563eb";
-            }, 1500);
+            btnSalvar.innerText = "✅ Salvo";
+            setTimeout(() => { btnSalvar.innerText = "💾 Salvar"; }, 1500);
         }
 
         function deletarProgressoSalvo() {
-            if (confirm("Deseja apagar o progresso e recomeçar do zero?")) {
-                localStorage.removeItem('metafrutas_savegame');
-                pontos = 0;
-                proximoMarcoBomba = 500;
-                marcosAlcancados.clear();
-                criarTabuleiro();
+            if (confirm("Deseja apagar tudo e recomeçar do zero?")) {
+                localStorage.removeItem('metafrutas_savegame_v4');
+                pontos = 0; proximoMarcoBomba = 500; estrelas = 0;
+                medalhasBronze = 0; medalhasPrata = 0; medalhasOuro = 0; trofeusOuro = 0; especiaisPlatina = 0;
+                marcosAlcancados.clear(); criarTabuleiro();
             }
         }
 
@@ -487,9 +683,7 @@
         }
 
         function inicializarAudioCtx() {
-            if (!audioCtx) {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            }
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         }
 
         function alternarMusica() {
@@ -497,26 +691,17 @@
             musicaLigada = !musicaLigada;
             const btn = document.getElementById('btn-musica');
             if (musicaLigada) {
-                btn.innerText = "🎵 Música: ON";
-                btn.className = "btn-game";
-                tocarMusicaFundo();
+                btn.innerText = "🎵 Música: ON"; btn.className = "btn-game"; tocarMusicaFundo();
             } else {
-                btn.innerText = "🎵 Música: OFF";
-                btn.className = "btn-game mutado";
-                clearInterval(intervaloMusica);
+                btn.innerText = "🎵 Música: OFF"; btn.className = "btn-game mutado"; clearInterval(intervaloMusica);
             }
         }
 
         function alternarEfeitos() {
             efeitosLigados = !efeitosLigados;
             const btn = document.getElementById('btn-efeitos');
-            if (efeitosLigados) {
-                btn.innerText = "🔊 Efeitos: ON";
-                btn.className = "btn-game";
-            } else {
-                btn.innerText = "🔊 Efeitos: OFF";
-                btn.className = "btn-game mutado";
-            }
+            btn.innerText = efeitosLigados ? "🔊 Efeitos: ON" : "🔊 Efeitos: OFF";
+            btn.className = efeitosLigados ? "btn-game" : "btn-game mutado";
         }
 
         function tocarMusicaFundo() {
@@ -525,16 +710,11 @@
             let index = 0;
             intervaloMusica = setInterval(() => {
                 if (!audioCtx || !musicaLigada) return;
-                let osc = audioCtx.createOscillator();
-                let gain = audioCtx.createGain();
-                osc.type = 'triangle';
-                osc.frequency.setValueAtTime(notas[index], audioCtx.currentTime);
-                gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 1.8);
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                osc.start();
-                osc.stop(audioCtx.currentTime + 1.8);
+                let osc = audioCtx.createOscillator(); let gain = audioCtx.createGain();
+                osc.type = 'triangle'; osc.frequency.setValueAtTime(notas[index], audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.04, audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 1.8);
+                osc.connect(gain); gain.connect(audioCtx.destination);
+                osc.start(); osc.stop(audioCtx.currentTime + 1.8);
                 index = (index + 1) % notas.length;
             }, 2000); 
         }
@@ -546,112 +726,141 @@
             for (let i = 0; i < quantidadeNotas; i++) {
                 setTimeout(() => {
                     if (!efeitosLigados) return;
-                    let osc = audioCtx.createOscillator();
-                    let gain = audioCtx.createGain();
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(frequenciaBase + (i * 100), audioCtx.currentTime);
-                    gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.15);
-                    osc.connect(gain);
-                    gain.connect(audioCtx.destination);
-                    osc.start();
-                    osc.stop(audioCtx.currentTime + 0.15);
-                }, i * 80);
+                    let osc = audioCtx.createOscillator(); let gain = audioCtx.createGain();
+                    osc.type = 'sine'; osc.frequency.setValueAtTime(frequenciaBase + (i * 120), audioCtx.currentTime);
+                    gain.gain.setValueAtTime(0.12, audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.15);
+                    osc.connect(gain); gain.connect(audioCtx.destination);
+                    osc.start(); osc.stop(audioCtx.currentTime + 0.15);
+                }, i * 70);
             }
         }
 
         function tocarSomExplosao() {
             if (!audioCtx || !efeitosLigados) return;
-            let osc = audioCtx.createOscillator();
-            let gain = audioCtx.createGain();
-            osc.type = 'sawtooth';
-            osc.frequency.setValueAtTime(120, audioCtx.currentTime);
-            osc.frequency.linearRampToValueAtTime(40, audioCtx.currentTime + 0.4);
-            gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start();
-            osc.stop(audioCtx.currentTime + 0.4);
+            let osc = audioCtx.createOscillator(); let gain = audioCtx.createGain();
+            osc.type = 'sawtooth'; osc.frequency.setValueAtTime(140, audioCtx.currentTime); osc.frequency.linearRampToValueAtTime(30, audioCtx.currentTime + 0.5);
+            gain.gain.setValueAtTime(0.35, audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.5);
         }
 
-        function exibirTextoFlutuante(tamanho) {
+        function exibirTextoFlutuante(tamanho, tipo = "normal") {
             let texto = "Meta ✨";
-            if (tamanho === 4) texto = "Metafofos 💖";
-            else if (tamanho === 5) text = "Super Metafofos 🌟";
+            if (tipo === "quadrado") texto = "Superbomba Linha! 🟩";
+            else if (tamanho === 4) texto = "Metafofos 💖";
+            else if (tamanho === 5) texto = "Superbomba Coluna! 🚀";
             else if (tamanho >= 6) texto = "Maria Helena Combo 🔥";
 
             const pop = document.createElement('div');
-            pop.className = 'combo-pop';
-            pop.innerText = texto;
-            layoutJogo.appendChild(pop);
-
+            pop.className = 'combo-pop'; pop.innerText = texto; layoutJogo.appendChild(pop);
             setTimeout(() => pop.remove(), 1200);
         }
 
+        function dispararAlertaTextoConquista(mensagem) {
+            const aviso = document.createElement('div');
+            aviso.className = 'alerta-conquista-pop';
+            aviso.innerHTML = message = mensagem;
+            document.body.appendChild(aviso);
+            setTimeout(() => aviso.remove(), 2500);
+        }
+
+        function abrirModalRegras() { modalRegras.style.display = "flex"; }
+        function fecharModalRegras() { modalRegras.style.display = "none"; }
+
+        function adicionarSuperbombaConquista() {
+            medalhasBronze++;
+            dispararAlertaTextoConquista("🥉 MEDALHA DE BRONZE!");
+
+            if (medalhasBronze >= 3) { 
+                medalhasBronze -= 3; 
+                medalhasPrata++; 
+                setTimeout(() => dispararAlertaTextoConquista("🥈 UPGRADE: MEDALHA DE PRATA!"), 600);
+            }
+            if (medalhasPrata >= 3) { 
+                medalhasPrata -= 3; 
+                medalhasOuro++; 
+                setTimeout(() => dispararAlertaTextoConquista("🥇 UPGRADE: MEDALHA DE OURO!"), 1200);
+            }
+            if (medalhasOuro >= 6) { 
+                medalhasOuro -= 6; 
+                trofeusOuro++; 
+                setTimeout(() => dispararAlertaTextoConquista("🏆 EVOLUÇÃO: TROFÉU DE OURO!!"), 1800);
+            }
+            if (trofeusOuro >= 3) { 
+                trofeusOuro -= 3; 
+                especiaisPlatina++; 
+                setTimeout(() => dispararAlertaTextoConquista("💎 SUPREMO: ESPECIAL DE PLATINA!!!"), 2400);
+            }
+            atualizarPainelConquistas();
+        }
+
+        function atualizarPainelConquistas() {
+            estrelasTexto.innerText = `${estrelas}/3`;
+            let html = "";
+            if (especiaisPlatina > 0) html += `<span>💎 x${especiaisPlatina}</span>`;
+            if (trofeusOuro > 0) html += `<span>🏆 x${trofeusOuro}</span>`;
+            if (medalhasOuro > 0) html += `<span>🥇 x${medalhasOuro}</span>`;
+            if (medalhasPrata > 0) html += `<span>🥈 x${medalhasPrata}</span>`;
+            if (medalhasBronze > 0) html += `<span>🥉 x${medalhasBronze}</span>`;
+            if (html === "") html = "<span>🏆 Sem conquistas</span>";
+            templatesListaTopo.innerHTML = html;
+        }
+
+        function ganharEstrela() {
+            estrelas++;
+            if (estrelas >= 3) {
+                estrelas = 0; 
+                gerarSuperbombaLinha();
+            }
+            atualizarPainelConquistas();
+        }
+
         function criarTabuleiro() {
-            tabuleiro.innerHTML = "";
-            quadrados = [];
+            tabuleiro.innerHTML = ""; quadrados = [];
             const frutasAtuais = obterFrutasDisponiveis();
             
             for (let i = 0; i < LARGURA * LARGURA; i++) {
                 const quadrado = document.createElement('div');
-                quadrado.classList.add('quadrado');
-                quadrado.setAttribute('id', i);
-                
+                quadrado.classList.add('quadrado'); quadrado.setAttribute('id', i);
                 const randomFruta = frutasAtuais[Math.floor(Math.random() * frutasAtuais.length)];
-                quadrado.classList.add(randomFruta.classe);
-                quadrado.innerText = randomFruta.emoji;
+                quadrado.classList.add(randomFruta.classe); quadrado.innerText = randomFruta.emoji;
                 
-                // Eventos unificados para clique e toque
                 quadrado.addEventListener('mousedown', iniciarArrasto);
                 quadrado.addEventListener('touchstart', iniciarArrasto, { passive: true });
-
-                tabuleiro.appendChild(quadrado);
-                quadrados.push(quadrado);
+                tabuleiro.appendChild(quadrado); quadrados.push(quadrado);
             }
 
             let loops = 0;
-            while (checarCombinacoes(false) && loops < 10) {
+            while (checarCombinacoesCompleto(false) && loops < 15) {
                 for (let i = 0; i < LARGURA * LARGURA; i++) {
-                    if (quadrados[i].innerText === '') {
+                    if (quadrados[i].innerText === '' || quadrados[i].className === 'quadrado') {
                         const randomFruta = frutasAtuais[Math.floor(Math.random() * frutasAtuais.length)];
-                        quadrados[i].className = `quadrado ${randomFruta.classe}`;
-                        quadrados[i].innerText = randomFruta.emoji;
+                        quadrados[i].className = `quadrado ${randomFruta.classe}`; quadrados[i].innerText = randomFruta.emoji;
                     }
                 }
                 loops++;
             }
-
-            atualizarInterface();
+            atualizarInterface(); atualizarPainelConquistas();
         }
 
         function iniciarArrasto(e) {
-            inicializarAudioCtx();
-            quadradoArrastadoId = parseInt(this.id);
+            inicializarAudioCtx(); quadradoArrastadoId = parseInt(this.id);
             
-            // CORREÇÃO CRÍTICA: Se clicar ou tocar diretamente na bomba, explode imediatamente!
-            if (this.classList.contains('bomba')) {
-                explodirBomba(quadradoArrastadoId);
-                e.preventDefault();
-                return;
+            // FILTRO DE BOMBAS CORRIGIDO: Agora aponta perfeitamente para a função correta ativarBombaFiltro
+            if (this.classList.contains('bomba') || this.classList.contains('bomba-linha') || this.classList.contains('bomba-coluna')) {
+                ativarBombaFiltro(quadradoArrastadoId, this.className);
+                if(e.cancelable) e.preventDefault(); return;
             }
-
             if (e.type === 'touchstart') {
-                touchStartX = e.touches[0].clientX;
-                touchStartY = e.touches[0].clientY;
+                touchStartX = e.touches[0].clientX; touchStartY = e.touches[0].clientY;
                 this.addEventListener('touchend', finalizarArrastoMovel, { once: true });
             } else {
-                touchStartX = e.clientX;
-                touchStartY = e.clientY;
+                touchStartX = e.clientX; touchStartY = e.clientY;
                 this.addEventListener('mouseup', finalizarArrastoPC, { once: true });
             }
         }
 
-        function finalizarArrastoPC(e) {
-            processarMovimento(e.clientX, e.clientY);
-        }
-
+        function finalizarArrastoPC(e) { processarMovimento(e.clientX, e.clientY); }
         function finalizarArrastoMovel(e) {
             if (e.changedTouches && e.changedTouches.length > 0) {
                 processarMovimento(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
@@ -659,15 +868,11 @@
         }
 
         function processarMovimento(endX, endY) {
-            let diffX = endX - touchStartX;
-            let diffY = endY - touchStartY;
+            let diffX = endX - touchStartX; let diffY = endY - touchStartY;
             let limiteMinimo = 25; 
-
             if (Math.abs(diffX) < limiteMinimo && Math.abs(diffY) < limiteMinimo) {
-                tratarCliqueSimples(quadradoArrastadoId);
-                return;
+                tratarCliqueSimples(quadradoArrastadoId); return;
             }
-
             let direcaoId = null;
             if (Math.abs(diffX) > Math.abs(diffY)) {
                 if (diffX > 0 && (quadradoArrastadoId % LARGURA < LARGURA - 1)) direcaoId = quadradoArrastadoId + 1; 
@@ -676,29 +881,18 @@
                 if (diffY > 0 && (quadradoArrastadoId < 56)) direcaoId = quadradoArrastadoId + LARGURA; 
                 if (diffY < 0 && (quadradoArrastadoId > 7)) direcaoId = quadradoArrastadoId - LARGURA; 
             }
-
-            if (direcaoId !== null) {
-                tentarTrocarValida(quadradoArrastadoId, direcaoId);
-            }
+            if (direcaoId !== null) tentarTrocarValida(quadradoArrastadoId, direcaoId);
         }
 
         let quadradoSelecionadoId = null;
         function tratarCliqueSimples(idAtual) {
             if (quadradoSelecionadoId === null) {
-                quadradoSelecionadoId = idAtual;
-                quadrados[quadradoSelecionadoId].classList.add('selecionado');
+                quadradoSelecionadoId = idAtual; quadrados[quadradoSelecionadoId].classList.add('selecionado');
             } else {
-                const idAnterior = quadradoSelecionadoId;
-                quadrados[idAnterior].classList.remove('selecionado');
-                quadradoSelecionadoId = null;
-
-                const movimentosValidos = [
-                    idAnterior - 1, idAnterior + 1,
-                    idAnterior - LARGURA, idAnterior + LARGURA
-                ];
+                const idAnterior = quadradoSelecionadoId; quadrados[idAnterior].classList.remove('selecionado'); quadradoSelecionadoId = null;
+                const movimentosValidos = [ idAnterior - 1, idAnterior + 1, idAnterior - LARGURA, idAnterior + LARGURA ];
                 const clicouNaBordaEsquerda = (idAnterior % LARGURA === 0 && idAtual === idAnterior - 1);
                 const clicouNaBordaDireita = (idAnterior % LARGURA === LARGURA - 1 && idAtual === idAnterior + 1);
-
                 if (movimentosValidos.includes(idAtual) && !clicouNaBordaEsquerda && !clicouNaBordaDireita) {
                     tentarTrocarValida(idAnterior, idAtual);
                 }
@@ -706,16 +900,11 @@
         }
 
         function tentarTrocarValida(id1, id2) {
-            if (quadrados[id1].classList.contains('bomba') || quadrados[id2].classList.contains('bomba')) return;
-
+            if (quadrados[id1].innerText === '💣' || quadrados[id2].innerText === '💣') return;
             trocarQuadrados(id1, id2);
             setTimeout(() => {
-                let temCombinacao = checarCombinacoes(true);
-                if (!temCombinacao) {
-                    trocarQuadrados(id1, id2); 
-                } else {
-                    salvarProgresso(); 
-                }
+                let temCombinacao = checarCombinacoesCompleto(true);
+                if (!temCombinacao) trocarQuadrados(id1, id2); else salvarProgresso();
             }, 200);
         }
 
@@ -726,94 +915,119 @@
         }
 
         function gerarBombaAleatoria() {
-            let indexAleatorio = Math.floor(Math.random() * (LARGURA * LARGURA));
-            quadrados[indexAleatorio].className = 'quadrado bomba';
-            quadrados[indexAleatorio].innerText = '💣';
+            let idx = Math.floor(Math.random() * (LARGURA * LARGURA));
+            quadrados[idx].className = 'quadrado bomba'; quadrados[idx].innerText = '💣';
         }
 
-        function explodirBomba(idBomba) {
-            tocarSomExplosao();
-            let linha = Math.floor(idBomba / LARGURA);
-            let coluna = idBomba % LARGURA;
-            let indicesParaApagar = [];
+        function gerarSuperbombaLinha() {
+            let idx = Math.floor(Math.random() * (LARGURA * LARGURA));
+            quadrados[idx].className = 'quadrado bomba-linha'; quadrados[idx].innerText = '💣';
+            adicionarSuperbombaConquista();
+        }
 
+        function gerarSuperbombaColuna() {
+            let idx = Math.floor(Math.random() * (LARGURA * LARGURA));
+            quadrados[idx].className = 'quadrado bomba-coluna'; quadrados[idx].innerText = '💣';
+            adicionarSuperbombaConquista();
+        }
+
+        // CORREÇÃO DO NOME DA FUNÇÃO (Removido o 'c' mudo antigo para bater 100% com o gatilho de clique)
+        function ativarBombaFiltro(id, classes) {
+            if (classes.includes('bomba-linha')) explodirBombaLinha(id);
+            else if (classes.includes('bomba-coluna')) explodirBombaColuna(id);
+            else explodirBombaNormal(id);
+        }
+
+        function explodirBombaNormal(idBomba) {
+            tocarSomExplosao();
+            let linha = Math.floor(idBomba / LARGURA); let coluna = idBomba % LARGURA; let indices = [];
             for (let r = linha - 1; r <= linha + 1; r++) {
                 for (let c = coluna - 1; c <= coluna + 1; c++) {
-                    if (r >= 0 && r < LARGURA && c >= 0 && c < LARGURA) {
-                        indicesParaApagar.push(r * LARGURA + c);
-                    }
+                    if (r >= 0 && r < LARGURA && c >= 0 && c < LARGURA) indices.push(r * LARGURA + c);
                 }
             }
-
-            pontos += (indicesParaApagar.length * 10); 
-            indicesParaApagar.forEach(idx => esvaziarQuadrado(idx));
-            
-            atualizarInterface();
-            salvarProgresso(); 
-            setTimeout(derrubarQuadrados, 250);
+            pontos += (indices.length * 10); indices.forEach(idx => esvaziarQuadrado(idx)); finalizarProcessoExplosao();
         }
 
-        function checarCombinacoes(contarPontos = true) {
-            let combinou = false;
-            let indicesParaApagar = new Set();
+        function explodirBombaLinha(idBomba) {
+            tocarSomExplosao();
+            let linha = Math.floor(idBomba / LARGURA); let indices = [];
+            for (let c = 0; c < LARGURA; c++) indices.push(linha * LARGURA + c);
+            pontos += (indices.length * 15); indices.forEach(idx => esvaziarQuadrado(idx)); finalizarProcessoExplosao();
+        }
 
-            // Horizontal
+        function explodirBombaColuna(idBomba) {
+            tocarSomExplosao();
+            let coluna = idBomba % LARGURA; let indices = [];
+            for (let r = 0; r < LARGURA; r++) indices.push(r * LARGURA + coluna);
+            pontos += (indices.length * 15); indices.forEach(idx => esvaziarQuadrado(idx)); finalizarProcessoExplosao();
+        }
+
+        function finalizarProcessoExplosao() { atualizarInterface(); salvarProgresso(); setTimeout(derrubarQuadrados, 250); }
+
+        function checarCombinacoesCompleto(contarPontos = true) {
+            let combinou = false; let indicesParaApagar = new Set();
+
             for (let r = 0; r < LARGURA; r++) {
-                let matchContador = 1; let matchTipo = ''; let matchIndices = [];
+                let contador = 1; let tipoMatch = ''; let listaMatch = [];
                 for (let c = 0; c < LARGURA; c++) {
-                    let idx = r * LARGURA + c;
-                    let tipoAtual = obterClasse(quadrados[idx]);
-                    if (c > 0 && tipoAtual === matchTipo && tipoAtual !== null) {
-                        matchContador++; matchIndices.push(idx);
+                    let idx = r * LARGURA + c; let tipoAtual = obterClasse(quadrados[idx]);
+                    if (c > 0 && tipoAtual === tipoMatch && tipoAtual !== null) {
+                        contador++; listaMatch.push(idx);
                     } else {
-                        if (matchContador >= 3) {
-                            matchIndices.forEach(id => indicesParaApagar.add(id));
-                            if(contarPontos) {
-                                calcularPontosCombo(matchContador);
-                                exibirTextoFlutuante(matchContador);
-                            }
+                        if (contador >= 3) {
+                            listaMatch.forEach(id => indicesParaApagar.add(id));
+                            if(contarPontos) processarPremiosCombo(contador, "normal");
                             combinou = true;
                         }
-                        matchContador = 1; matchTipo = tipoAtual; matchIndices = [idx];
+                        contador = 1; tipoMatch = tipoAtual; listaMatch = [idx];
                     }
                 }
-                if (matchContador >= 3) {
-                    matchIndices.forEach(id => indicesParaApagar.add(id));
-                    if(contarPontos) {
-                        calcularPontosCombo(matchContador);
-                        exibirTextoFlutuante(matchContador);
-                    }
+                if (contador >= 3) {
+                    listaMatch.forEach(id => indicesParaApagar.add(id));
+                    if(contarPontos) processarPremiosCombo(contador, "normal");
                     combinou = true;
                 }
             }
 
-            // Vertical
             for (let c = 0; c < LARGURA; c++) {
-                let matchContador = 1; let matchTipo = ''; let matchIndices = [];
+                let contador = 1; let tipoMatch = ''; let listaMatch = [];
                 for (let r = 0; r < LARGURA; r++) {
-                    let idx = r * LARGURA + c;
-                    let tipoAtual = obterClasse(quadrados[idx]);
-                    if (r > 0 && tipoAtual === matchTipo && tipoAtual !== null) {
-                        matchContador++; matchIndices.push(idx);
+                    let idx = r * LARGURA + c; let tipoAtual = obterClasse(quadrados[idx]);
+                    if (r > 0 && tipoAtual === tipoMatch && tipoAtual !== null) {
+                        contador++; listaMatch.push(idx);
                     } else {
-                        if (matchContador >= 3) {
-                            matchIndices.forEach(id => indicesParaApagar.add(id));
-                            if(contarPontos) {
-                                calcularPontosCombo(matchContador);
-                                exibirTextoFlutuante(matchContador);
-                            }
+                        if (contador >= 3) {
+                            listaMatch.forEach(id => indicesParaApagar.add(id));
+                            if(contarPontos) processarPremiosCombo(contador, "normal");
                             combinou = true;
                         }
-                        matchContador = 1; matchTipo = tipoAtual; matchIndices = [idx];
+                        contador = 1; tipoMatch = tipoAtual; listaMatch = [idx];
                     }
                 }
-                if (matchContador >= 3) {
-                    matchIndices.forEach(id => indicesParaApagar.add(id));
-                    if(contarPontos) {
-                        calcularPontosCombo(matchContador);
-                        exibirTextoFlutuante(matchContador);
-                    }
+                if (contador >= 3) {
+                    listaMatch.forEach(id => indicesParaApagar.add(id));
+                    if(contarPontos) processarPremiosCombo(contador, "normal");
                     combinou = true;
+                }
+            }
+
+            for (let r = 0; r < LARGURA - 1; r++) {
+                for (let c = 0; c < LARGURA - 1; c++) {
+                    let idTopLeft = r * LARGURA + c; let idTopRight = idTopLeft + 1;
+                    let idBotLeft = idTopLeft + LARGURA; let idBotRight = idBotLeft + 1;
+
+                    let t1 = obterClasse(quadrados[idTopLeft]); let t2 = obterClasse(quadrados[idTopRight]);
+                    let t3 = obterClasse(quadrados[idBotLeft]); let t4 = obterClasse(quadrados[idBotRight]);
+
+                    if (t1 && t1 === t2 && t1 === t3 && t1 === t4) {
+                        indicesParaApagar.add(idTopLeft); indicesParaApagar.add(idTopRight);
+                        indicesParaApagar.add(idBotLeft); indicesParaApagar.add(idBotRight);
+                        if (contarPontos && !combinou) {
+                            processarPremiosCombo(4, "quadrado");
+                        }
+                        combinou = true;
+                    }
                 }
             }
 
@@ -825,81 +1039,80 @@
             return combinou;
         }
 
-        function calcularPontosCombo(tamanho) {
+        function processarPremiosCombo(tamanho, tipo) {
             tocarSomCombo(tamanho);
             if (tamanho === 3) pontos += 10;
             else if (tamanho === 4) pontos += 30;
             else if (tamanho >= 5) pontos += 60;
+
+            exibirTextoFlutuante(tamanho, tipo);
+
+            if (tipo === "quadrado") {
+                ganharEstrela();
+                gerarSuperbombaLinha();
+            } else if (tamanho === 4) {
+                ganharEstrela();
+            } else if (tamanho >= 5) {
+                gerarSuperbombaColuna();
+            }
         }
 
         function atualizarInterface() {
             placarTexto.innerText = pontos;
-            
-            let nivelAtual = metasNiveis[metasNiveis.length - 1];
-            let proximoNivelMin = 500;
+            let nivelAtual = metasNiveis[metasNiveis.length - 1]; let proximoNivelMin = 500;
 
             for (let i = 0; i < metasNiveis.length; i++) {
                 if (pontos >= metasNiveis[i].min) {
-                    nivelAtual = metasNiveis[i];
-                    proximoNivelMin = (i > 0) ? metasNiveis[i - 1].min : 20000;
-                    break;
+                    nivelAtual = metasNiveis[i]; proximoNivelMin = (i > 0) ? metasNiveis[i - 1].min : 20000; break;
                 }
             }
-
             nivelTexto.innerText = nivelAtual.nome;
 
             if (pontos >= 20000) {
                 barraProgresso.style.height = "100%";
             } else {
-                let piso = nivelAtual.min;
-                let teto = proximoNivelMin;
+                let piso = nivelAtual.min; let teto = proximoNivelMin;
                 let porcentagem = ((pontos - piso) / (teto - piso)) * 100;
                 barraProgresso.style.height = `${Math.min(Math.max(porcentagem, 0), 100)}%`;
             }
 
             if (pontos >= proximoMarcoBomba) {
-                proximoMarcoBomba += 500;
-                gerarBombaAleatoria();
+                proximoMarcoBomba += 500; gerarBombaAleatoria();
             }
-
             if (nivelAtual.min > 0 && !marcosAlcancados.has(nivelAtual.min)) {
-                marcosAlcancados.add(nivelAtual.min);
-                abrirModal(nivelAtual.nome);
+                marcosAlcancados.add(nivelAtual.min); abrirModal(nivelAtual.nome);
             }
         }
 
         function abrirModal(nomeNivel) {
-            modalTextoNivel.innerText = `Nível "${nomeNivel}" 🚀`;
-            modalAlerta.style.display = "flex";
+            modalTextoNivel.innerText = `Nível "${nomeNivel}" 🚀`; modalAlerta.style.display = "flex";
         }
-
-        function fecharModal() {
-            modalAlerta.style.display = "none";
-        }
+        function fecharModal() { modalAlerta.style.display = "none"; }
 
         function obterClasse(quadrado) {
-            if (!quadrado || quadrado.classList.contains('bomba')) return null;
+            if (!quadrado || quadrado.innerText === '💣') return null;
             const todasClasses = Array.from(quadrado.classList);
             const frutaEncontrada = bancoFrutas.find(f => todasClasses.includes(f.classe));
             return frutaEncontrada ? frutaEncontrada.classe : null;
         }
 
         function esvaziarQuadrado(index) {
-            quadrados[index].className = 'quadrado';
-            quadrados[index].innerText = '';
+            quadrados[index].className = 'quadrado'; quadrados[index].innerText = '';
         }
 
         function derrubarQuadrados() {
             const frutasAtuais = obterFrutasDisponiveis();
+            let fezMovimento = false;
 
-            for (let i = 0; i < 56; i++) {
+            for (let i = 55; i >= 0; i--) {
                 if (quadrados[i + LARGURA].innerText === '') {
                     const classeAtual = obterClasse(quadrados[i]);
                     if (classeAtual) {
                         const f = bancoFrutas.find(f => f.classe === classeAtual);
                         quadrados[i + LARGURA].className = `quadrado ${classeAtual}`;
-                        quadrados[i + LARGURA].innerText = f.emoji;
+                        quadrados[i + LARGURA].innerText = f.emoji; 
                         esvaziarQuadrado(i);
+                        fezMovimento = true;
                     }
                 }
             }
@@ -907,93 +1120,87 @@
             for (let i = 0; i < LARGURA; i++) {
                 if (quadrados[i].innerText === '') {
                     const randomFruta = frutasAtuais[Math.floor(Math.random() * frutasAtuais.length)];
-                    quadrados[i].className = `quadrado ${randomFruta.classe}`;
+                    quadrados[i].className = `quadrado ${randomFruta.classe}`; 
                     quadrados[i].innerText = randomFruta.emoji;
+                    fezMovimento = true;
                 }
             }
 
-            if (quadrados.some(q => q.innerText === '')) {
+            if (fezMovimento) {
                 setTimeout(derrubarQuadrados, 80);
             } else {
-                let teveMatch = checarCombinacoes(true);
-                if (!teveMatch) {
-                    verificarFimDeJogo();
-                }
+                let teveMatchAutomatico = checarCombinacoesCompleto(true);
+                if (!teveMatchAutomatico) verificarFimDeJogo();
             }
         }
 
         function verificarFimDeJogo() {
-            let temBombaDisponivel = quadrados.some(q => q.classList.contains('bomba'));
-            if (temBombaDisponivel) return;
-
+            let temBombaDisponivel = quadrados.some(q => q.innerText === '💣'); if (temBombaDisponivel) return;
             let movimentoPossivel = false;
 
             function simulaEChecaMatch(id1, id2) {
                 let c1 = quadrados[id1].className; let t1 = quadrados[id1].innerText;
                 let c2 = quadrados[id2].className; let t2 = quadrados[id2].innerText;
-
                 quadrados[id1].className = c2; quadrados[id1].innerText = t2;
                 quadrados[id2].className = c1; quadrados[id2].innerText = t1;
-
                 let temMatch = testeMatchLocal();
-
                 quadrados[id1].className = c1; quadrados[id1].innerText = t1;
                 quadrados[id2].className = c2; quadrados[id2].innerText = t2;
-
                 return temMatch;
             }
 
             function testeMatchLocal() {
                 for (let r = 0; r < LARGURA; r++) {
                     for (let c = 0; c < LARGURA - 2; c++) {
-                        let i = r * LARGURA + c;
-                        let t = obterClasse(quadrados[i]);
+                        let i = r * LARGURA + c; let t = obterClasse(quadrados[i]);
                         if (t && t === obterClasse(quadrados[i+1]) && t === obterClasse(quadrados[i+2])) return true;
                     }
                 }
                 for (let c = 0; c < LARGURA; c++) {
                     for (let r = 0; r < LARGURA - 2; r++) {
-                        let i = r * LARGURA + c;
-                        let t = obterClasse(quadrados[i]);
+                        let i = r * LARGURA + c; let t = obterClasse(quadrados[i]);
                         if (t && t === obterClasse(quadrados[i+LARGURA]) && t === obterClasse(quadrados[i+LARGURA*2])) return true;
+                    }
+                }
+                for (let r = 0; r < LARGURA - 1; r++) {
+                    for (let c = 0; c < LARGURA - 1; c++) {
+                        let i = r * LARGURA + c; let t = obterClasse(quadrados[i]);
+                        if (t && t === obterClasse(quadrados[i+1]) && t === obterClasse(quadrados[i+LARGURA]) && t === obterClasse(quadrados[i+LARGURA+1])) return true;
                     }
                 }
                 return false;
             }
 
             for (let i = 0; i < LARGURA * LARGURA; i++) {
-                let linha = Math.floor(i / LARGURA);
-                let coluna = i % LARGURA;
-
-                if (coluna < LARGURA - 1) {
-                    if (simulaEChecaMatch(i, i + 1)) { movimentoPossivel = true; break; }
-                }
-                if (linha < LARGURA - 1) {
-                    if (simulaEChecaMatch(i, i + LARGURA)) { movimentoPossivel = true; break; }
-                }
+                let linha = Math.floor(i / LARGURA); let coluna = i % LARGURA;
+                if (coluna < LARGURA - 1 && simulaEChecaMatch(i, i + 1)) { movimentoPossivel = true; break; }
+                if (linha < LARGURA - 1 && simulaEChecaMatch(i, i + LARGURA)) { movimentoPossivel = true; break; }
             }
-
-            if (!movimentoPossivel) {
-                dispararGameOver();
-            }
+            if (!movimentoPossivel) dispararGameOver();
         }
 
         function dispararGameOver() {
-            localStorage.removeItem('metafrutas_savegame');
+            localStorage.removeItem('metafrutas_savegame_v4');
             gameoverDetalhes.innerHTML = `
-                Não há mais movimentos ou bombas disponíveis.<br><br>
-                <strong>Pontuação Final:</strong> ${pontos} pontos<br>
-                <strong>Nível Alcançado:</strong> ${nivelTexto.innerText}
+                Não há mais combinações possíveis no tabuleiro.<br><br>
+                <strong>Pontuação Final:</strong> <span style="color:#4ade80">${pontos}</span> pontos<br>
+                <strong>Último Nível:</strong> ${nivelTexto.innerText}
             `;
-            modalGameOver.style.display = "flex";
+            let htmlFinais = "";
+            if (especiaisPlatina > 0) htmlFinais += `🔹 <strong>Especial de Platina:</strong> ${especiaisPlatina} 💎<br>`;
+            if (trofeusOuro > 0) htmlFinais += `🏆 <strong>Troféu de Ouro:</strong> ${trofeusOuro}<br>`;
+            if (medalhasOuro > 0) htmlFinais += `🥇 <strong>Medalha de Ouro:</strong> ${medalhasOuro}<br>`;
+            if (medalhasPrata > 0) htmlFinais += `🥈 <strong>Medalha de Prata:</strong> ${medalhasPrata}<br>`;
+            if (medalhasBronze > 0) htmlFinais += `🥉 <strong>Medalha de Bronze:</strong> ${medalhasBronze}<br>`;
+            if (htmlFinais === "") htmlFinais = "Nenhuma medalha ou troféu foi ganho nesta rodada.";
+            
+            conquistasFinaisDetalhe.innerHTML = htmlFinais; modalGameOver.style.display = "flex";
         }
 
         function reiniciarJogo() {
-            pontos = 0;
-            proximoMarcoBomba = 500;
-            marcosAlcancados.clear();
-            modalGameOver.style.display = "none";
-            criarTabuleiro();
+            pontos = 0; proximoMarcoBomba = 500; estrelas = 0;
+            medalhasBronze = 0; medalhasPrata = 0; medalhasOuro = 0; trofeusOuro = 0; especiaisPlatina = 0;
+            marcosAlcancados.clear(); modalGameOver.style.display = "none"; criarTabuleiro();
         }
 
         carregarProgressoSalvo();
