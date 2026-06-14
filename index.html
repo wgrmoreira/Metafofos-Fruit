@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MetaFrutas</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: linear-gradient(135deg, #111827, #1f2937);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow: hidden;
+            padding: 10px;
+        }
+
+        h1 {
+            margin-bottom: 5px;
+            color: #4ade80;
+            font-size: 2rem;
+            text-shadow: 0 0 10px rgba(74, 222, 128, 0.3);
+            text-align: center;
+        }
+
+        /* Painel Superior de Informações */
+        #painel-superior {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .info-box {
+            font-size: 1.1rem;
+            background: #374151;
+            padding: 8px 20px;
+            border-radius: 50px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            border: 2px solid #4b5563;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        #nivel-box {
+            border-color: #4ade80;
+            color: #4ade80;
+        }
+
+        /* Layout Principal: Barra Lateral + Tabuleiro */
+        #layout-jogo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        /* Container da Barra de Progresso Vertical */
+        #container-barra {
+            width: 20px;
+            height: 380px;
+            background: #1f2937;
+            border: 2px solid #374151;
+            border-radius: 10px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
+        }
+
+        #barra-progresso {
+            width: 100%;
+            height: 0%;
+            background: linear-gradient(to top, #22c55e, #4ade80);
+            border-radius: 8px;
+            transition: height 0.3s ease;
+            box-shadow: 0 0 10px rgba(74, 222, 128, 0.5);
+        }
+
+        /* Container do Tabuleiro Responsivo */
+        #container-tabuleiro {
+            flex: 1;
+            aspect-ratio: 1 / 1;
+            background: #1f2937;
+            padding: 8px;
+            border-radius: 16px;
+            box-shadow: 0 12px 24px rgba(0,0,0,0.6);
+            border: 3px solid #374151;
+        }
+
+        #tabuleiro {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            grid-template-rows: repeat(8, 1fr);
+            gap: 4px;
+            width: 100%;
+            height: 100%;
+        }
+
+        .quadrado {
+            background: #2d3748;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: transform 0.1s, background-color 0.2s;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+            box-shadow: inset 0 -4px 0 rgba(0,0,0,0.2);
+        }
+
+        .morango { background: #991b1b; }
+        .banana { background: #854d0e; }
+        .melancia { background: #065f46; }
+        .uva { background: #581c87; }
+        .laranja { background: #9a3412; }
+        
+        .selecionado {
+            outline: 4px solid #ffffff;
+            box-shadow: 0 0 15px #ffffff;
+            transform: scale(1.08);
+            z-index: 10;
+        }
+
+        @media (max-width: 440px) {
+            #container-barra { height: 280px; width: 16px; }
+            .quadrado { font-size: 1.4rem; border-radius: 6px; }
+            h1 { font-size: 1.6rem; }
+            .info-box { font-size: 0.9rem; padding: 6px 14px; }
+        }
+
+        #btn-som {
+            margin-top: 15px;
+            background: #4b5563;
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        /* ---- SISTEMA DE MODAIS (TELAS SOBREPOSTAS) ---- */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-conteudo {
+            background: #1f2937;
+            border: 2px solid #4ade80;
+            border-radius: 16px;
+            padding: 30px 20px;
+            text-align: center;
+            max-width: 320px;
+            width: 100%;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+            animation: surgir 0.3s ease-out;
+        }
+
+        .modal-titulo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #4ade80;
+            margin-bottom: 15px;
+            text-shadow: 0 0 8px rgba(74, 222, 128, 0.2);
+        }
+
+        .modal-detalhes {
+            font-size: 1.1rem;
+            color: #e5e7eb;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .btn-modal {
+            background: #374151;
+            border: 1px solid #4b5563;
+            color: #ffffff;
+            padding: 10px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+            font-weight: bold;
+        }
+
+        .btn-modal:hover {
+            background: #4b5563;
+            border-color: #9ca3af;
+        }
+
+        #modal-gameover .modal-conteudo {
+            border-color: #ef4444;
+        }
+        #modal-gameover .modal-titulo {
+            color: #ef4444;
+            text-shadow: 0 0 8px rgba(239, 68, 68, 0.2);
+        }
+
+        @keyframes surgir {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>MetaFrutas</h1>
+    
+    <div id="painel-superior">
+        <div class="info-box">Pontos: <span id="pontos-texto">0</span></div>
+        <div class="info-box" id="nivel-box">Nível: <span id="nivel-texto">Cambaxirra</span></div>
+    </div>
+    
+    <div id="layout-jogo">
+        <div id="container-barra">
+            <div id="barra-progresso"></div>
+        </div>
+
+        <div id="container-tabuleiro">
+            <div id="tabuleiro"></div>
+        </div>
+    </div>
+
+    <button id="btn-som" onclick="iniciarAudio()">🎵 Ativar Música/Sons</button>
+
+    <div id="modal-alerta" class="modal">
+        <div class="modal-conteudo">
+            <div id="modal-texto" class="modal-titulo">Meta</div>
+            <button class="btn-modal" onclick="fecharModal()">Continuar</button>
+        </div>
+    </div>
+
+    <div id="modal-gameover" class="modal">
+        <div class="modal-conteudo">
+            <div class="modal-titulo">Fim de Jogo!</div>
+            <div id="gameover-detalhes" class="modal-detalhes">
+                Sem movimentos possíveis.<br>
+                Pontos: 0<br>
+                Nível: Cambaxirra
+            </div>
+            <button class="btn-modal" onclick="reiniciarJogo()">Iniciar Novamente</button>
+        </div>
+    </div>
+
+    <script>
+        const tabuleiro = document.getElementById('tabuleiro');
+        const placarTexto = document.getElementById('pontos-texto');
+        const nivelTexto = document.getElementById('nivel-texto');
+        const barraProgresso = document.getElementById('barra-progresso');
+        const modalAlerta = document.getElementById('modal-alerta');
+        const modalTexto = document.getElementById('modal-texto');
+        const modalGameOver = document.getElementById('modal-gameover');
+        const gameoverDetalhes = document.getElementById('gameover-detalhes');
+        
+        const LARGURA = 8;
+        let pontos = 0;
+        let quadrados = [];
+        let audioIniciado = false;
+        let audioCtx = null;
+        let marcosAlcancados = new Set();
+        let quadradoSelecionadoId = null;
+
+        const frutas = [
+            { classe: 'morango', emoji: '🍓' },
+            { classe: 'banana', emoji: '🍌' },
+            { classe: 'melancia', emoji: '🍉' },
+            { classe: 'uva', emoji: '🍇' },
+            { classe: 'laranja', emoji: '🍊' }
+        ];
+
+        // Definição estrita das faixas de níveis baseadas na pontuação mínima
+        const metasNiveis = [
+            { min: 20000, nome: "Nivel Pica" },
+            { min: 18000, nome: "Nível Wagner" },
+            { min: 16000, nome: "Nível Veruska" },
+            { min: 14000, nome: "Nível Morg" },
+            { min: 12000, nome: "Nível Vitor" },
+            { min: 10000, nome: "Nível Guilherme" },
+            { min: 8000, nome: "Nível Coronel" },
+            { min: 6000, nome: "Nível Will" },
+            { min: 4000, nome: "Nivel Ramon" },
+            { min: 2000, nome: "Nível Cap" },
+            { min: 1500, nome: "Metafofos" },
+            { min: 1000, nome: "Fofos" },
+            { min: 500,  nome: "Meta" },
+            { min: 0,    nome: "Cambaxirra" }
+        ];
+
+        function iniciarAudio() {
+            if (audioIniciado) return;
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            tocarMusicaFundo();
+            audioIniciado = true;
+            document.getElementById('btn-som').innerText = "🔊 Áudio Ativado";
+        }
+
+        function tocarMusicaFundo() {
+            const notas = [261.63, 293.66, 329.63, 349.23, 392.00, 440.00];
+            let index = 0;
+            setInterval(() => {
+                if (!audioCtx) return;
+                let osc = audioCtx.createOscillator();
+                let gain = audioCtx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(notas[index], audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 1.8);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 1.8);
+                index = (index + 1) % notas.length;
+            }, 2000); 
+        }
+
+        function tocarSomCombo(tamanhoCombo) {
+            if (!audioCtx) return;
+            let quantidadeNotas = tamanhoCombo === 3 ? 2 : tamanhoCombo === 4 ? 4 : 6;
+            let frequenciaBase = tamanhoCombo === 3 ? 523.25 : tamanhoCombo === 4 ? 659.25 : 783.99;
+            for (let i = 0; i < quantidadeNotas; i++) {
+                setTimeout(() => {
+                    let osc = audioCtx.createOscillator();
+                    let gain = audioCtx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(frequenciaBase + (i * 100), audioCtx.currentTime);
+                    gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.15);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.15);
+                }, i * 80);
+            }
+        }
+
+        function criarTabuleiro() {
+            tabuleiro.innerHTML = "";
+            quadrados = [];
+            for (let i = 0; i < LARGURA * LARGURA; i++) {
+                const quadrado = document.createElement('div');
+                quadrado.classList.add('quadrado');
+                quadrado.setAttribute('id', i);
+                
+                const randomFruta = frutas[Math.floor(Math.random() * frutas.length)];
+                quadrado.classList.add(randomFruta.classe);
+                quadrado.innerText = randomFruta.emoji;
+                
+                quadrado.addEventListener('click', aoClicarNoQuadrado);
+                quadrado.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    aoClicarNoQuadrado.call(this);
+                }, { passive: false });
+
+                tabuleiro.appendChild(quadrado);
+                quadrados.push(quadrado);
+            }
+            // Limpa matches iniciais sem pontuar
+            checarCombinacoes(false);
+            atualizarInterface();
+        }
+
+        function aoClicarNoQuadrado() {
+            iniciarAudio();
+            const idAtual = parseInt(this.id);
+
+            if (quadradoSelecionadoId === null) {
+                quadradoSelecionadoId = idAtual;
+                quadrados[quadradoSelecionadoId].classList.add('selecionado');
+            } else {
+                const idAnterior = quadradoSelecionadoId;
+                quadrados[idAnterior].classList.remove('selecionado');
+                quadradoSelecionadoId = null;
+
+                const movimentosValidos = [
+                    idAnterior - 1, idAnterior + 1,
+                    idAnterior - LARGURA, idAnterior + LARGURA
+                ];
+
+                const clicouNaBordaEsquerda = (idAnterior % LARGURA === 0 && idAtual === idAnterior - 1);
+                const clicouNaBordaDireita = (idAnterior % LARGURA === LARGURA - 1 && idAtual === idAnterior + 1);
+
+                if (movimentosValidos.includes(idAtual) && !clicouNaBordaEsquerda && !clicouNaBordaDireita) {
+                    trocarQuadrados(idAnterior, idAtual);
+                    
+                    setTimeout(() => {
+                        let temCombinacao = checarCombinacoes(true);
+                        if (!temCombinacao) {
+                            trocarQuadrados(idAnterior, idAtual); // Desfaz movimento inválido
+                        }
+                    }, 200);
+                }
+            }
+        }
+
+        function trocarQuadrados(id1, id2) {
+            const f1 = frutas.find(f => quadrados[id1].classList.contains(f.classe));
+            const f2 = frutas.find(f => quadrados[id2].classList.contains(f.classe));
+
+            quadrados[id1].className = `quadrado ${f2.classe}`;
+            quadrados[id1].innerText = f2.emoji;
+            quadrados[id2].className = `quadrado ${f1.classe}`;
+            quadrados[id2].innerText = f1.emoji;
+        }
+
+        function checarCombinacoes(contarPontos = true) {
+            let combinou = false;
+            let indicesParaApagar = new Set();
+
+            // Checagem Horizontal
+            for (let r = 0; r < LARGURA; r++) {
+                let matchContador = 1;
+                let matchTipo = '';
+                let matchIndices = [];
+
+                for (let c = 0; c < LARGURA; c++) {
+                    let idx = r * LARGURA + c;
+                    let tipoAtual = obterClasse(quadrados[idx]);
+
+                    if (c > 0 && tipoAtual === matchTipo && tipoAtual !== null) {
+                        matchContador++;
+                        matchIndices.push(idx);
+                    } else {
+                        if (matchContador >= 3) {
+                            matchIndices.forEach(id => indicesParaApagar.add(id));
+                            if(contarPontos) calcularPontosCombo(matchContador);
+                            combinou = true;
+                        }
+                        matchContador = 1;
+                        matchTipo = tipoAtual;
+                        matchIndices = [idx];
+                    }
+                }
+                if (matchContador >= 3) {
+                    matchIndices.forEach(id => indicesParaApagar.add(id));
+                    if(contarPontos) calcularPontosCombo(matchContador);
+                    combinou = true;
+                }
+            }
+
+            // Checagem Vertical
+            for (let c = 0; c < LARGURA; c++) {
+                let matchContador = 1;
+                let matchTipo = '';
+                let matchIndices = [];
+
+                for (let r = 0; r < LARGURA; r++) {
+                    let idx = r * LARGURA + c;
+                    let tipoAtual = obterClasse(quadrados[idx]);
+
+                    if (r > 0 && tipoAtual === matchTipo && tipoAtual !== null) {
+                        matchContador++;
+                        matchIndices.push(idx);
+                    } else {
+                        if (matchContador >= 3) {
+                            matchIndices.forEach(id => indicesParaApagar.add(id));
+                            if(contarPontos) calcularPontosCombo(matchContador);
+                            combinou = true;
+                        }
+                        matchContador = 1;
+                        matchTipo = tipoAtual;
+                        matchIndices = [idx];
+                    }
+                }
+                if (matchContador >= 3) {
+                    matchIndices.forEach(id => indicesParaApagar.add(id));
+                    if(contarPontos) calcularPontosCombo(matchContador);
+                    combinou = true;
+                }
+            }
+
+            if (combinou) {
+                indicesParaApagar.forEach(index => esvaziarQuadrado(index));
+                atualizarInterface();
+                setTimeout(derrubarQuadrados, 250);
+            }
+
+            return combinou;
+        }
+
+        function calcularPontosCombo(tamanho) {
+            tocarSomCombo(tamanho);
+            if (tamanho === 3) pontos += 10;
+            else if (tamanho === 4) pontos += 30;
+            else if (tamanho >= 5) pontos += 60;
+        }
+
+        // Lógica Dinâmica da Interface (Placar, Níveis e Barra Lateral)
+        function atualizarInterface() {
+            placarTexto.innerText = pontos;
+            
+            // 1. Identificar o nível atual e os limites do patamar
+            let nivelAtual = metasNiveis[metasNiveis.length - 1]; // Padrão: Cambaxirra
+            let proximoNivelMin = 500;
+
+            for (let i = 0; i < metasNiveis.length; i++) {
+                if (pontos >= metasNiveis[i].min) {
+                    nivelAtual = metasNiveis[i];
+                    // O próximo nível mínimo será o que está acima dele no array
+                    proximoNivelMin = (i > 0) ? metasNiveis[i - 1].min : 20000;
+                    break;
+                }
+            }
+
+            nivelTexto.innerText = nivelAtual.nome;
+
+            // 2. Cálculo do preenchimento da Barra de Progresso
+            if (pontos >= 20000) {
+                barraProgresso.style.height = "100%"; // Fixa em 100% após 20k
+            } else {
+                let piso = nivelAtual.min;
+                let teto = proximoNivelMin;
+                let progressoNoPatamar = pontos - piso;
+                let tamanhoDoPatamar = teto - piso;
+                let porcentagem = (progressoNoPatamar / tamanhoDoPatamar) * 100;
+                barraProgresso.style.height = `${Math.min(Math.max(porcentagem, 0), 100)}%`;
+            }
+
+            // 3. Disparo do Alerta de Novo Nível (apenas uma vez por marco)
+            if (nivelAtual.min > 0 && !marcosAlcancados.has(nivelAtual.min)) {
+                marcosAlcancados.add(nivelAtual.min);
+                abrirModal(nivelAtual.nome);
+            }
+        }
+
+        function abrirModal(texto) {
+            modalTexto.innerText = texto;
+            modalAlerta.style.display = "flex";
+        }
+
+        function fecharModal() {
+            modalAlerta.style.display = "none";
+        }
+
+        function obterClasse(quadrado) {
+            if (!quadrado) return null;
+            const f = frutas.find(f => quadrado.classList.contains(f.classe));
+            return f ? f.classe : null;
+        }
+
+        function esvaziarQuadrado(index) {
+            quadrados[index].className = 'quadrado';
+            quadrados[index].innerText = '';
+        }
+
+        function derrubarQuadrados() {
+            for (let i = 0; i < 56; i++) {
+                if (quadrados[i + LARGURA].innerText === '') {
+                    const classeAtual = obterClasse(quadrados[i]);
+                    if (classeAtual) {
+                        const f = frutas.find(f => f.classe === classeAtual);
+                        quadrados[i + LARGURA].className = `quadrado ${classeAtual}`;
+                        quadrados[i + LARGURA].innerText = f.emoji;
+                        esvaziarQuadrado(i);
+                    }
+                }
+            }
+
+            for (let i = 0; i < LARGURA; i++) {
+                if (quadrados[i].innerText === '') {
+                    const randomFruta = frutas[Math.floor(Math.random() * frutas.length)];
+                    quadrados[i].className = `quadrado ${randomFruta.classe}`;
+                    quadrados[i].innerText = randomFruta.emoji;
+                }
+            }
+
+            if (quadrados.some(q => q.innerText === '')) {
+                setTimeout(derrubarQuadrados, 80);
+            } else {
+                let teveMatch = checarCombinacoes(true);
+                // Se o tabuleiro estabilizou e não gerou nenhum match automático, verifica se o jogador travou
+                if (!teveMatch) {
+                    verificarFimDeJogo();
+                }
+            }
+        }
+
+        // Algoritmo de Verificação de Jogadas Possíveis (Simula trocas vizinhas)
+        function verificarFimDeJogo() {
+            let movimentoPossivel = false;
+
+            // Função auxiliar para simular temporariamente e testar se gera match de 3
+            function simulaEChecaMatch(id1, id2) {
+                // Salva estados originais
+                let c1 = quadrados[id1].className; let t1 = quadrados[id1].innerText;
+                let c2 = quadrados[id2].className; let t2 = quadrados[id2].innerText;
+
+                // Executa a troca virtual
+                quadrados[id1].className = c2; quadrados[id1].innerText = t2;
+                quadrados[id2].className = c1; quadrados[id2].innerText = t1;
+
+                let temMatch = testeMatchLocal();
+
+                // Desfaz a troca virtual imediatamente
+                quadrados[id1].className = c1; quadrados[id1].innerText = t1;
+                quadrados[id2].className = c2; quadrados[id2].innerText = t2;
+
+                return temMatch;
+            }
+
+            function testeMatchLocal() {
+                // Checa linhas horizontais para match de 3
+                for (let r = 0; r < LARGURA; r++) {
+                    for (let c = 0; c < LARGURA - 2; c++) {
+                        let i = r * LARGURA + c;
+                        let t = obterClasse(quadrados[i]);
+                        if (t && t === obterClasse(quadrados[i+1]) && t === obterClasse(quadrados[i+2])) return true;
+                    }
+                }
+                // Checa linhas verticais para match de 3
+                for (let c = 0; c < LARGURA; c++) {
+                    for (let r = 0; r < LARGURA - 2; r++) {
+                        let i = r * LARGURA + c;
+                        let t = obterClasse(quadrados[i]);
+                        if (t && t === obterClasse(quadrados[i+LARGURA]) && t === obterClasse(quadrados[i+LARGURA*2])) return true;
+                    }
+                }
+                return false;
+            }
+
+            // Percorre todo o tabuleiro testando vizinhos da direita e de baixo
+            for (let i = 0; i < LARGURA * LARGURA; i++) {
+                let linha = Math.floor(i / LARGURA);
+                let coluna = i % LARGURA;
+
+                // Testar com o vizinho da direita
+                if (coluna < LARGURA - 1) {
+                    if (simulaEChecaMatch(i, i + 1)) { movimentoPossivel = true; break; }
+                }
+                // Testar com o vizinho de baixo
+                if (linha < LARGURA - 1) {
+                    if (simulaEChecaMatch(i, i + LARGURA)) { movimentoPossivel = true; break; }
+                }
+            }
+
+            if (!movimentoPossivel) {
+                dispararGameOver();
+            }
+        }
+
+        function dispararGameOver() {
+            gameoverDetalhes.innerHTML = `
+                Sem movimentos possíveis.<br><br>
+                <strong>Pontuação Final:</strong> ${pontos} pontos<br>
+                <strong>Nível Alcançado:</strong> ${nivelTexto.innerText}
+            `;
+            modalGameOver.style.display = "flex";
+        }
+
+        function reiniciarJogo() {
+            pontos = 0;
+            marcosAlcancados.clear();
+            modalGameOver.style.display = "none";
+            criarTabuleiro();
+        }
+
+        criarTabuleiro();
+    </script>
+</body>
+</html>
